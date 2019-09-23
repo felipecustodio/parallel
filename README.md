@@ -1,2 +1,3 @@
-# parallel
-:vertical_traffic_light: Studies on Parallel Programming concepts, patterns and best practices
+![Header](https://i.imgur.com/t64cyPf.png)
+
+Basic concepts of parallel architectures and concurrent programming and the development of concurrent programs.
