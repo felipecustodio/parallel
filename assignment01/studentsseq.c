@@ -1,3 +1,5 @@
+// Rodar com a flag -D DEBUG para ativar o modo debug
+//#define DEBUG
 /*
     Este programa calcula as seguintes estatisticas
     das notas dos alunos nas escolas das diferentes
@@ -7,6 +9,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <omp.h>
 
 /*
@@ -24,7 +27,6 @@ int R, C, A, SEED;
     cidades = Notas de cada aluno k de cada cidade j.
     regioes = Notas de cada aluno k de cada cidade j
               de cada regiao i.
-
 */
 int *alunos;
 int **cidades;
@@ -68,9 +70,61 @@ int melhor_cidade_regiao;
 int melhor_cidade;
 
 
-void ordena() {
+void debug() {
+    int i, j;
+    R = 3;
+    C = 4;
+    A = 6;
+    SEED = 7;
+    regioes = (int ***) malloc(sizeof(int **) * R);
+    for (i = 0; i < R; i++) {
+        cidades = (int **) malloc(sizeof(int *) * C);
+        for (j = 0; j < C; j++) {
+            alunos = (int *) malloc(sizeof(int) * A);
+            cidades[j] = alunos;
+        }
+        regioes[i] = cidades;
+    }
 
+    static const int defaults[3][4][6] = {  {   // Regiao 0
+                                            {30, 40, 20, 80, 85, 10},
+                                            {10, 20, 30, 40, 50, 60},
+                                            {60, 50, 40, 30, 20, 10},
+                                            {70, 55, 35, 80, 95, 27}
+                                            },
+                                            {   // Regiao 1
+                                            {35, 45, 25, 85, 90, 15},
+                                            {15, 25, 35, 45, 55, 65},
+                                            {65, 55, 45, 35, 25, 15},
+                                            {75, 60, 40, 85, 100, 32}
+                                            },
+                                            {   // Regiao 2
+                                            {20, 30, 10, 70, 75, 0},
+                                            {0, 10, 20, 30, 40, 50},
+                                            {50, 40, 30, 20, 10, 0},
+                                            {60, 45, 25, 70, 85, 17}
+                                            } };
+    for (i = 0; i < R; i++) {
+        for (j = 0; j < C; j++) {
+            memcpy(regioes[i][j], defaults[i][j], sizeof(int) * A);
+        }
+    }
 }
+
+
+int comparador(const void *a, const void *b) {
+    return (*(int*)a - *(int*)b);
+}
+
+void ordena() { // Implementar o counting sort
+    int i, j;
+    for (i = 0; i < R; i++) {
+        for (j = 0; j < C; j++) {
+            qsort(regioes[i][j], A, sizeof(int), comparador);
+        }
+    }
+}
+
 
 void calcula_menor() {
 
@@ -94,19 +148,20 @@ void calcula_desvio_padrao() {
 
 int main(int argc, char *argv[]) {
     /*
-        Variaveis para o calculo do tempo de execucao
-        e indices dos loops.
+    Variaveis para o calculo do tempo de execucao
+    e indices dos loops.
     */
     double start_time, time;
     int i, j, k;
 
+#ifndef DEBUG
     // Leitura dos dados
     scanf("%d %d %d %d", &R, &C, &A, &SEED);
 
     // Definicao da semente aleatoria
     srand(SEED);
 
-// Alocacao de memoria:
+// Alocacao de memoria para os dados:
     // Geracao das matrizes
     regioes = (int ***) malloc(sizeof(int **) * R);
     for (i = 0; i < R; i++) {
@@ -120,8 +175,10 @@ int main(int argc, char *argv[]) {
         }
         regioes[i] = cidades;
     }
-
-    // Alocacao de memoria para os resultados:
+#else
+    debug();
+#endif
+// Alocacao de memoria para os resultados:
     // Cidades
     menor = (int **) malloc(sizeof(int *) * R);
     maior = (int **) malloc(sizeof(int *) * R);
@@ -144,9 +201,10 @@ int main(int argc, char *argv[]) {
     DP_regiao = (double *) malloc(sizeof(double) * R);
 
 // Calculo das estatisticas
+
     start_time = omp_get_wtime();
 
-    //to-do
+    ordena();
 
     time = omp_get_wtime() - start_time;
 
@@ -155,17 +213,17 @@ int main(int argc, char *argv[]) {
     for (i = 0; i < R; i++) {
         for (j = 0; j < C; j++) {
             printf("Reg %d - Cid %d: "
-                   "menor: %d, "
-                   "maior: %d, "
-                   "mediana: %.2lf, "
-                   "média: %.2lf e "
-                   "DP: %.2lf\n",
-                   i, j,
-                   menor[i][j],
-                   maior[i][j],
-                   mediana[i][j],
-                   media[i][j],
-                   DP[i][j]);
+                    "menor: %d, "
+                    "maior: %d, "
+                    "mediana: %.2lf, "
+                    "media: %.2lf e "
+                    "DP: %.2lf\n",
+                    i, j,
+                    menor[i][j],
+                    maior[i][j],
+                    mediana[i][j],
+                    media[i][j],
+                    DP[i][j]);
         }
         printf("\n");
     }
@@ -173,40 +231,40 @@ int main(int argc, char *argv[]) {
     // Regioes
     for (i = 0; i < R; i++) {
         printf("Reg %d: "
-               "menor: %d, "
-               "maior: %d, "
-               "mediana: %.2lf, "
-               "média: %.2lf e "
-               "DP: %.2lf\n",
-               i,
-               menor_regiao[i],
-               maior_regiao[i],
-               mediana_regiao[i],
-               media_regiao[i],
-               DP_regiao[i]);
+                "menor: %d, "
+                "maior: %d, "
+                "mediana: %.2lf, "
+                "media: %.2lf e "
+                "DP: %.2lf\n",
+                i,
+                menor_regiao[i],
+                maior_regiao[i],
+                mediana_regiao[i],
+                media_regiao[i],
+                DP_regiao[i]);
     }
     printf("\n");
 
     // Brasil
     printf("Brasil: "
-           "menor: %d, "
-           "maior: %d, "
-           "mediana: %.2lf, "
-           "média: %.2lf e "
-           "DP: %.2lf\n\n",
-           menor_brasil,
-           maior_brasil,
-           mediana_brasil,
-           media_brasil,
-           DP_brasil);
+            "menor: %d, "
+            "maior: %d, "
+            "mediana: %.2lf, "
+            "media: %.2lf e "
+            "DP: %.2lf\n\n",
+            menor_brasil,
+            maior_brasil,
+            mediana_brasil,
+            media_brasil,
+            DP_brasil);
 
     // Melhores
     printf("Melhor regiao: Regiao %d\n"
-           "Melhor cidade: Regiao %d, "
-           "Cidade %d\n",
-           melhor_regiao,
-           melhor_cidade_regiao,
-           melhor_cidade);
+            "Melhor cidade: Regiao %d, "
+            "Cidade %d\n",
+            melhor_regiao,
+            melhor_cidade_regiao,
+            melhor_cidade);
 
     // Tempo de execucao
     printf("Tempo de execucao: %g\n", time);
