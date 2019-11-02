@@ -1,39 +1,41 @@
+// Rodar com a flag -D DEBUG para ativar o modo debug
+//#define DEBUG
 /*
-   Este programa calcula as seguintes estatisticas
-   das notas dos alunos nas escolas das diferentes
-   cidades do Brasil:
-   Menor, Maior, Media, Mediana e Desvio Padrao (DP)
-   */
+    Este programa calcula as seguintes estatisticas
+    das notas dos alunos nas escolas das diferentes
+    cidades do Brasil:
+    Menor, Maior, Media, Mediana e Desvio Padrao (DP)
+*/
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <omp.h>
 
 /*
-   Entrada do programa:
-   R = Numero de regioes distintas.
-   C = Numero de cidades distintas.
-   A = Numero de alunos por cidade.
-   SEED = semente usada para gerar numeros aleatorios.
-   */
+    Entrada do programa:
+    R = Numero de regioes distintas.
+    C = Numero de cidades distintas.
+    A = Numero de alunos por cidade.
+    SEED = semente usada para gerar numeros aleatorios.
+*/
 int R, C, A, SEED;
 
 /*
-Dados:
-alunos  = Notas de cada aluno k.
-cidades = Notas de cada aluno k de cada cidade j.
-regioes = Notas de cada aluno k de cada cidade j
-de cada regiao i.
-
+    Dados:
+    alunos  = Notas de cada aluno k.
+    cidades = Notas de cada aluno k de cada cidade j.
+    regioes = Notas de cada aluno k de cada cidade j
+              de cada regiao i.
 */
 int *alunos;
 int **cidades;
 int ***regioes;
 
 /*
-   Estatisticas das cidades referentes
-   a cada cidade j de cada regiao i:
-   */
+    Estatisticas das cidades referentes
+    a cada cidade j de cada regiao i:
+*/
 int **menor;
 int **maior;
 double **mediana;
@@ -41,9 +43,9 @@ double **media;
 double **DP;
 
 /*
-   Estatisticas das regioes referentes
-   a cada regiao i:
-   */
+    Estatisticas das regioes referentes
+    a cada regiao i:
+*/
 int *menor_regiao;
 int *maior_regiao;
 double *mediana_regiao;
@@ -51,8 +53,8 @@ double *media_regiao;
 double *DP_regiao;
 
 /*
-   Estatisticas de todas as regioes
-   */
+    Estatisticas de todas as regioes
+*/
 int menor_brasil;
 int maior_brasil;
 double mediana_brasil;
@@ -60,17 +62,53 @@ double media_brasil;
 double DP_brasil;
 
 /*
-   Indice da melhor regiao e da melhor
-   cidade e sua respectiva regiao:
-   */
+    Indice da melhor regiao e da melhor
+    cidade e sua respectiva regiao:
+*/
 int melhor_regiao;
 int melhor_cidade_regiao;
 int melhor_cidade;
 
 
 void debug() {
+    int i, j;
+    R = 3;
+    C = 4;
+    A = 6;
+    SEED = 7;
+    regioes = (int ***) malloc(sizeof(int **) * R);
+    for (i = 0; i < R; i++) {
+        cidades = (int **) malloc(sizeof(int *) * C);
+        for (j = 0; j < C; j++) {
+            alunos = (int *) malloc(sizeof(int) * A);
+            cidades[j] = alunos;
+        }
+        regioes[i] = cidades;
+    }
 
-
+    static const int defaults[3][4][6] = {  {   // Regiao 0
+                                            {30, 40, 20, 80, 85, 10},
+                                            {10, 20, 30, 40, 50, 60},
+                                            {60, 50, 40, 30, 20, 10},
+                                            {70, 55, 35, 80, 95, 27}
+                                            },
+                                            {   // Regiao 1
+                                            {35, 45, 25, 85, 90, 15},
+                                            {15, 25, 35, 45, 55, 65},
+                                            {65, 55, 45, 35, 25, 15},
+                                            {75, 60, 40, 85, 100, 32}
+                                            },
+                                            {   // Regiao 2
+                                            {20, 30, 10, 70, 75, 0},
+                                            {0, 10, 20, 30, 40, 50},
+                                            {50, 40, 30, 20, 10, 0},
+                                            {60, 45, 25, 70, 85, 17}
+                                            } };
+    for (i = 0; i < R; i++) {
+        for (j = 0; j < C; j++) {
+            memcpy(regioes[i][j], defaults[i][j], sizeof(int) * A);
+        }
+    }
 }
 
 
@@ -78,7 +116,7 @@ int comparador(const void *a, const void *b) {
     return (*(int*)a - *(int*)b);
 }
 
-void ordena() {
+void ordena() { // Implementar o counting sort
     int i, j;
     for (i = 0; i < R; i++) {
         for (j = 0; j < C; j++) {
@@ -116,15 +154,15 @@ int main(int argc, char *argv[]) {
     double start_time, time;
     int i, j, k;
 
+#ifndef DEBUG
     // Leitura dos dados
     scanf("%d %d %d %d", &R, &C, &A, &SEED);
 
     // Definicao da semente aleatoria
     srand(SEED);
 
-// Alocacao de memoria:
+// Alocacao de memoria para os dados:
     // Geracao das matrizes
-#ifndef DEBUG
     regioes = (int ***) malloc(sizeof(int **) * R);
     for (i = 0; i < R; i++) {
         cidades = (int **) malloc(sizeof(int *) * C);
@@ -140,7 +178,7 @@ int main(int argc, char *argv[]) {
 #else
     debug();
 #endif
-    // Alocacao de memoria para os resultados:
+// Alocacao de memoria para os resultados:
     // Cidades
     menor = (int **) malloc(sizeof(int *) * R);
     maior = (int **) malloc(sizeof(int *) * R);
@@ -170,7 +208,7 @@ int main(int argc, char *argv[]) {
 
     time = omp_get_wtime() - start_time;
 
-    // Impressao dos resultados:
+// Impressao dos resultados:
     // Cidades
     for (i = 0; i < R; i++) {
         for (j = 0; j < C; j++) {
