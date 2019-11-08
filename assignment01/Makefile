@@ -6,14 +6,14 @@ BINARY = ./students
 IN = input.in
 
 # sources
-SRC = ./studentspar.c
+# SRC = ./studentspar.c
+SRC = ./studentsseq.c
 
 # includes
 INCLUDES = .
 
 # compiler flags
-# FLAGS = -g -std=c99 -lm -Wall -pedantic -fopenmp
-FLAGS = -g -lm
+FLAGS = -g -std=c99 -lm -Wall -pedantic -fopenmp
 
 # in case ANSI C is necessary
 # FLAGS = -g -std=c89 -lm -Wall -pedantic -fopenmp

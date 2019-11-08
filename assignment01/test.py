@@ -6,7 +6,6 @@ casos de teste e seus resultados esperados.
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 import sys
 sys.stdout = open('test_output.out', 'w')
 
@@ -21,6 +20,9 @@ with open('input.in', 'r') as file:
 
 np.random.seed(seed=S)
 grades = np.random.randint(low=0, high=100, size=(R, C, A))
+grades_2d = grades.reshape((R*C, A))
+
+np.savetxt('test_matrix.out', grades_2d, fmt='%i', delimiter=",")
 
 
 city_averages = {}
