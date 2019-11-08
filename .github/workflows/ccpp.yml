@@ -10,6 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: cd
-      run: cd assignment1
+      run: cd assignment01
     - name: make
       run: make
