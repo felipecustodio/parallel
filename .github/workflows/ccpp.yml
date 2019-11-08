@@ -9,7 +9,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: cd
-      run: cd assignment01
+      
     - name: make
       run: make
+      working-directory: ./assignment01
