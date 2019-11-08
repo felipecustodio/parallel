@@ -136,6 +136,29 @@ void ordena() { // Implementar o counting sort
     }
 }
 
+void escrever_matriz(int*** matriz) {
+    FILE *fp = NULL;
+    int i, j, k;
+
+    fp = fopen("./matriz_gerada.csv", "w");
+    if (fp == NULL) {
+        exit(1);
+    }
+
+    for (i = 0; i < R; i++) {
+        for (j = 0; j < C; j++) {
+            for (k = 0; k < A; k++) {
+                fprintf(fp, "%d", regioes[i][j][k]);
+                if (k < A-1) {
+                    fprintf(fp, ",");
+                }
+            }
+            fprintf(fp, "\n");
+        }
+    }
+    fclose(fp);
+}
+
 void counting_sort(int *vetor, int *contagem) {
     for (int i = 0; i < A; i++) {
         contagem[vetor[i]]++;
@@ -198,6 +221,9 @@ int main(int argc, char *argv[]) {
         }
         regioes[i] = cidades;
     }
+
+
+    escrever_matriz(regioes);
 
     // Geracao dos vetores de contagem
     contagem_regioes = (int **)malloc(sizeof(int *) * R);
