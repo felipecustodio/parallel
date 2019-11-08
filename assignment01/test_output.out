@@ -1,0 +1,23 @@
+Regiao 0 - Cid 0: menor: 23, maior: 83, mediana: 57.0, media: 52.166666666666664 e DP: 22.497530728701957
+Regiao 0 - Cid 1: menor: 14, maior: 92, mediana: 64.5, media: 57.833333333333336 e DP: 30.20715514943806
+Regiao 0 - Cid 2: menor: 8, maior: 90, mediana: 45.0, media: 49.166666666666664 e DP: 25.406145363321496
+Regiao 0 - Cid 3: menor: 0, maior: 75, mediana: 25.5, media: 31.166666666666668 e DP: 28.410189877733814
+
+Regiao 1 - Cid 0: menor: 19, maior: 69, mediana: 58.0, media: 51.833333333333336 e DP: 16.547070905618174
+Regiao 1 - Cid 1: menor: 24, maior: 64, mediana: 54.0, media: 48.5 e DP: 14.545904349105742
+Regiao 1 - Cid 2: menor: 4, maior: 78, mediana: 47.0, media: 43.0 e DP: 28.855964143772194
+Regiao 1 - Cid 3: menor: 48, maior: 99, mediana: 77.5, media: 76.0 e DP: 16.22754859285078
+
+Regiao 2 - Cid 0: menor: 1, maior: 93, mediana: 37.5, media: 41.5 e DP: 30.45625277891772
+Regiao 2 - Cid 1: menor: 10, maior: 92, mediana: 49.5, media: 49.166666666666664 e DP: 28.725230876163362
+Regiao 2 - Cid 2: menor: 7, maior: 96, mediana: 42.0, media: 50.0 e DP: 35.16627171974116
+Regiao 2 - Cid 3: menor: 19, maior: 97, mediana: 79.0, media: 67.66666666666667 e DP: 30.825674724525044
+
+Regiao 0: menor: 0, maior: 92, mediana: 47.5, media: 47.583333333333336 e DP: 28.588920736692547
+Regiao 1: menor: 4, maior: 99, mediana: 58.0, media: 54.833333333333336 e DP: 23.55077257520205
+Regiao 2: menor: 1, maior: 97, mediana: 52.5, media: 52.083333333333336 e DP: 32.81503297101633
+
+Brasil: menor: 0, maior: 99, mediana: 55.5, media: 51.5 e DP: 28.726197876580265
+
+Melhor regiao: Regiao 1
+Melhor cidade: Regiao 1, Cidade 3
