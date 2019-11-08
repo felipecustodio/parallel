@@ -11,11 +11,11 @@ sys.stdout = open('test_output.out', 'w')
 
 
 with open('input.in', 'r') as file:
-    data = file.read().replace('\n', '')
-    R = int(data[0])
-    C = int(data[1])
-    A = int(data[2])
-    S = int(data[3])
+    R = int(file.readline())
+    C = int(file.readline())
+    A = int(file.readline())
+    S = int(file.readline())
+    print(R, C, A, S)
 
 
 np.random.seed(seed=S)
