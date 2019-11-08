@@ -12,6 +12,8 @@
 #include <string.h>
 #include <omp.h>
 
+#define NOTA_MAXIMA 101
+
 /*
     Entrada do programa:
     R = Numero de regioes distintas.
@@ -31,6 +33,15 @@ int R, C, A, SEED;
 int *alunos;
 int **cidades;
 int ***regioes;
+
+/*
+    Vetores de contagem de notas
+    para o Counting Sort e cálculos
+    requisitados.
+*/
+int ***contagem_cidades;
+int **contagem_regioes;
+int *contagem_pais;
 
 /*
     Estatisticas das cidades referentes
@@ -125,6 +136,18 @@ void ordena() { // Implementar o counting sort
     }
 }
 
+void counting_sort(int *vetor, int *contagem) {
+    for (int i = 0; i < A; i++) {
+        contagem[vetor[i]]++;
+    }
+
+    int k = 0;
+    for (int i = 0; i < NOTA_MAXIMA; i++) {
+        for (int j = 0; j < contagem[i]; j++) {
+            vetor[k++] = i;
+        }
+    }
+}
 
 void calcula_menor() {
 
@@ -175,6 +198,23 @@ int main(int argc, char *argv[]) {
         }
         regioes[i] = cidades;
     }
+
+    // Geracao dos vetores de contagem
+    contagem_regioes = (int **)malloc(sizeof(int *) * R);
+    contagem_pais = (int *)calloc(NOTA_MAXIMA, sizeof(int));
+    contagem_cidades = (int ***) malloc(sizeof(int**) * R);
+
+    for (i = 0; i < R; i++) {
+        // para cada região, um vetor de contagem para cada cidade
+        contagem_cidades[i] = (int **) malloc(sizeof(int *) * C);
+        for (j = 0; j < C; j++) {
+            // para cada cidade, um vetor de contagem de cada nota
+            contagem_cidades[i][j] = (int *) malloc(sizeof(int) * NOTA_MAXIMA);
+        }
+        contagem_regioes[i] = (int *)calloc(NOTA_MAXIMA, sizeof(int));
+    }
+
+
 #else
     debug();
 #endif
@@ -204,9 +244,54 @@ int main(int argc, char *argv[]) {
 
     start_time = omp_get_wtime();
 
-    ordena();
+    // Impressão da matriz para depuração
+    // printf("\nPRÉ-ORDENAÇÃO\n");
+    // for (i = 0; i < R; i++) {
+    //     for (j = 0; j < C; j++) {
+    //         for (k = 0; k < A; k++) {
+    //             printf("%d ", regioes[i][j][k]);
+    //         }
+    //         printf("\n");
+    //     }
+    // }
+    // printf("\n");
+
+    // Geração dos vetores de contagem
+    for (i = 0; i < R; i++) {
+        // gerar vetores de contagem para cada cidade
+        for (j = 0; j < C; j++) {
+            counting_sort(regioes[i][j], contagem_cidades[i][j]);
+        }
+        // para gerar o vetor de contagem da região, somar os 
+        // vetores de cidade
+        for (j = 0; j < C; j++) {
+            for (k = 0; k < NOTA_MAXIMA; k++) {
+                contagem_regioes[i][k] += contagem_cidades[i][j][k];
+            }
+        }
+    }
+    // para gerar o vetor de contagem do país, somar
+    // os vetores de região
+    for (i = 0; i < R; i++) {
+        for (k = 0; k < NOTA_MAXIMA; k++) {
+            contagem_pais[k] += contagem_regioes[i][k];
+        }
+    }
 
     time = omp_get_wtime() - start_time;
+
+    // Impressão da matriz para depuração
+    // printf("\nPÓS-ORDENAÇÃO\n");
+    // for (i = 0; i < R; i++) {
+    //     for (j = 0; j < C; j++) {
+    //         for (k = 0; k < A; k++) {
+    //             printf("%d ", regioes[i][j][k]);
+    //         }
+    //         printf("\n");
+    //     }
+    // }
+    // printf("\n");
+
 
 // Impressao dos resultados:
     // Cidades
