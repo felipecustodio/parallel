@@ -1,0 +1,15 @@
+name: Assignment 1 - CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: cd
+      run: cd assignment01
+    - name: make
+      run: make
