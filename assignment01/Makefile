@@ -24,7 +24,7 @@ compile:
 	$(CC) -o $(BINARY) -I $(INCLUDES) $(SRC) $(FLAGS)
 
 run:
-	$(BINARY) < $(IN)
+	$(BINARY) < $(IN) > program_output.out
 
 debug:
 	valgrind --leak-check=full --show-reachable=yes --track-origins=yes $(BINARY)

@@ -136,7 +136,7 @@ void ordena() { // Implementar o counting sort
     }
 }
 
-void escrever_matriz(int*** matriz) {
+void escrever_matriz() {
     FILE *fp = NULL;
     int i, j, k;
 
@@ -222,9 +222,6 @@ int main(int argc, char *argv[]) {
         regioes[i] = cidades;
     }
 
-
-    escrever_matriz(regioes);
-
     // Geracao dos vetores de contagem
     contagem_regioes = (int **)malloc(sizeof(int *) * R);
     contagem_pais = (int *)calloc(NOTA_MAXIMA, sizeof(int));
@@ -266,7 +263,9 @@ int main(int argc, char *argv[]) {
     media_regiao = (double *) malloc(sizeof(double) * R);
     DP_regiao = (double *) malloc(sizeof(double) * R);
 
-// Calculo das estatisticas
+    escrever_matriz();
+
+    // Calculo das estatisticas
 
     start_time = omp_get_wtime();
 
