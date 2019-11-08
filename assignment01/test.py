@@ -6,6 +6,7 @@ casos de teste e seus resultados esperados.
 """
 
 import numpy as np
+from numpy import genfromtxt
 import sys
 sys.stdout = open('test_output.out', 'w')
 
@@ -15,14 +16,10 @@ with open('input.in', 'r') as file:
     C = int(file.readline())
     A = int(file.readline())
     S = int(file.readline())
-    print(R, C, A, S)
 
 
-np.random.seed(seed=S)
-grades = np.random.randint(low=0, high=100, size=(R, C, A))
-grades_2d = grades.reshape((R*C, A))
-
-np.savetxt('test_matrix.out', grades_2d, fmt='%i', delimiter=",")
+grades_2d = genfromtxt('matriz_gerada.csv', delimiter=',')
+grades = grades_2d.reshape((R, C, A))
 
 
 city_averages = {}
@@ -30,7 +27,7 @@ for index_region, region in enumerate(grades):
     if(index_region > 0): 
         print()
     for index_city, city in enumerate(region):
-        print(f"Regiao {index_region} - Cid {index_city}: ", end='')
+        print(f"Reg {index_region} - Cid {index_city}: ", end='')
         menor = np.min(city)
         maior = np.max(city)
         mediana = np.median(city)
@@ -45,7 +42,7 @@ print()
 
 region_averages = {}
 for index_region, region in enumerate(grades):
-    print(f"Regiao {index_region}: ", end='')
+    print(f"Reg {index_region}: ", end='')
     menor = np.min(region)
     maior = np.max(region)
     mediana = np.median(region)

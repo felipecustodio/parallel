@@ -1,23 +1,23 @@
-Regiao 0 - Cid 0: menor: 23, maior: 83, mediana: 57.0, media: 52.166666666666664 e DP: 22.497530728701957
-Regiao 0 - Cid 1: menor: 14, maior: 92, mediana: 64.5, media: 57.833333333333336 e DP: 30.20715514943806
-Regiao 0 - Cid 2: menor: 8, maior: 90, mediana: 45.0, media: 49.166666666666664 e DP: 25.406145363321496
-Regiao 0 - Cid 3: menor: 0, maior: 75, mediana: 25.5, media: 31.166666666666668 e DP: 28.410189877733814
+Reg 0 - Cid 0: menor: 17.0, maior: 99.0, mediana: 71.5, media: 67.83333333333333 e DP: 26.07947255772035
+Reg 0 - Cid 1: menor: 7.0, maior: 100.0, mediana: 38.5, media: 49.333333333333336 e DP: 34.7499000797924
+Reg 0 - Cid 2: menor: 14.0, maior: 78.0, mediana: 65.5, media: 56.166666666666664 e DP: 21.957661280038202
+Reg 0 - Cid 3: menor: 2.0, maior: 100.0, mediana: 44.0, media: 47.166666666666664 e DP: 38.33369565046165
 
-Regiao 1 - Cid 0: menor: 19, maior: 69, mediana: 58.0, media: 51.833333333333336 e DP: 16.547070905618174
-Regiao 1 - Cid 1: menor: 24, maior: 64, mediana: 54.0, media: 48.5 e DP: 14.545904349105742
-Regiao 1 - Cid 2: menor: 4, maior: 78, mediana: 47.0, media: 43.0 e DP: 28.855964143772194
-Regiao 1 - Cid 3: menor: 48, maior: 99, mediana: 77.5, media: 76.0 e DP: 16.22754859285078
+Reg 1 - Cid 0: menor: 29.0, maior: 94.0, mediana: 65.5, media: 64.33333333333333 e DP: 20.40969268645551
+Reg 1 - Cid 1: menor: 35.0, maior: 84.0, mediana: 71.0, media: 66.83333333333333 e DP: 16.59735588044741
+Reg 1 - Cid 2: menor: 4.0, maior: 100.0, mediana: 21.5, media: 38.833333333333336 e DP: 36.60790746394676
+Reg 1 - Cid 3: menor: 1.0, maior: 85.0, mediana: 34.5, media: 39.0 e DP: 31.32091952673165
 
-Regiao 2 - Cid 0: menor: 1, maior: 93, mediana: 37.5, media: 41.5 e DP: 30.45625277891772
-Regiao 2 - Cid 1: menor: 10, maior: 92, mediana: 49.5, media: 49.166666666666664 e DP: 28.725230876163362
-Regiao 2 - Cid 2: menor: 7, maior: 96, mediana: 42.0, media: 50.0 e DP: 35.16627171974116
-Regiao 2 - Cid 3: menor: 19, maior: 97, mediana: 79.0, media: 67.66666666666667 e DP: 30.825674724525044
+Reg 2 - Cid 0: menor: 3.0, maior: 84.0, mediana: 40.0, media: 41.0 e DP: 30.74627348693388
+Reg 2 - Cid 1: menor: 1.0, maior: 97.0, mediana: 54.5, media: 47.5 e DP: 33.81690898549619
+Reg 2 - Cid 2: menor: 0.0, maior: 80.0, mediana: 50.0, media: 46.666666666666664 e DP: 29.391986814247332
+Reg 2 - Cid 3: menor: 1.0, maior: 96.0, mediana: 42.0, media: 44.333333333333336 e DP: 29.578520735305357
 
-Regiao 0: menor: 0, maior: 92, mediana: 47.5, media: 47.583333333333336 e DP: 28.588920736692547
-Regiao 1: menor: 4, maior: 99, mediana: 58.0, media: 54.833333333333336 e DP: 23.55077257520205
-Regiao 2: menor: 1, maior: 97, mediana: 52.5, media: 52.083333333333336 e DP: 32.81503297101633
+Reg 0: menor: 2.0, maior: 100.0, mediana: 64.0, media: 55.125 e DP: 32.01082173786442
+Reg 1: menor: 1.0, maior: 100.0, mediana: 60.0, media: 52.25 e DP: 30.5262864866768
+Reg 2: menor: 0.0, maior: 97.0, mediana: 48.0, media: 44.875 e DP: 31.03668863887813
 
-Brasil: menor: 0, maior: 99, mediana: 55.5, media: 51.5 e DP: 28.726197876580265
+Brasil: menor: 0.0, maior: 100.0, mediana: 59.0, media: 50.75 e DP: 31.494598302283872
 
-Melhor regiao: Regiao 1
-Melhor cidade: Regiao 1, Cidade 3
+Melhor regiao: Regiao 0
+Melhor cidade: Regiao 0, Cidade 0
