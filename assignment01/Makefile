@@ -13,7 +13,7 @@ SRC = ./studentsseq.c
 INCLUDES = .
 
 # compiler flags
-FLAGS = -g -std=c99 -lm -Wall -pedantic -fopenmp
+FLAGS = -g -std=c99 -lm -Wall -pedantic -fopenmp -ffast-math
 
 # in case ANSI C is necessary
 # FLAGS = -g -std=c89 -lm -Wall -pedantic -fopenmp
