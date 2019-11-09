@@ -175,7 +175,7 @@ int calcula_menor(int *contagem) {
 
 int calcula_maior(int *contagem) {
     int i;
-    for (i = NOTA_MAXIMA; i >= 0; i--) {
+    for (i = NOTA_MAXIMA-1; i >= 0; i--) {
         if (contagem[i] > 0) {
             return i;
         }
@@ -480,7 +480,10 @@ int main(int argc, char *argv[]) {
             free(contagem_cidades[i][j]);
         }
         free(regioes[i]);
+		free(contagem_cidades[i]);
     }
+	free(contagem_cidades);
+	free(contagem_regioes);
     free(contagem_pais);
     free(regioes);
     free(menor);
