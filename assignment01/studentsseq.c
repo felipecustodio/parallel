@@ -1,5 +1,5 @@
 // Rodar com a flag -D DEBUG para ativar o modo debug
-//#define DEBUG
+// #define DEBUG
 /*
     Este programa calcula as seguintes estatisticas
     das notas dos alunos nas escolas das diferentes
@@ -38,7 +38,7 @@ int ***regioes;
 
 /*
     Vetores de contagem de notas
-    para o Counting Sort e c√°lculos
+    para o Counting Sort e c·lculos
     requisitados.
 */
 int ***contagem_cidades;
@@ -51,7 +51,7 @@ int *contagem_pais;
 */
 int **menor;
 int **maior;
-int **mediana;
+double **mediana;
 double **media;
 double **DP;
 
@@ -61,7 +61,7 @@ double **DP;
 */
 int *menor_regiao;
 int *maior_regiao;
-int *mediana_regiao;
+double *mediana_regiao;
 double *media_regiao;
 double *DP_regiao;
 
@@ -70,7 +70,7 @@ double *DP_regiao;
 */
 int menor_brasil;
 int maior_brasil;
-int mediana_brasil;
+double mediana_brasil;
 double media_brasil;
 double DP_brasil;
 
@@ -124,20 +124,6 @@ void debug() {
     }
 }
 
-
-int comparador(const void *a, const void *b) {
-    return (*(int*)a - *(int*)b);
-}
-
-void ordena() { // Implementar o counting sort
-    int i, j;
-    for (i = 0; i < R; i++) {
-        for (j = 0; j < C; j++) {
-            qsort(regioes[i][j], A, sizeof(int), comparador);
-        }
-    }
-}
-
 void escrever_matriz() {
     FILE *fp = NULL;
     int i, j, k;
@@ -162,16 +148,19 @@ void escrever_matriz() {
 }
 
 void counting_sort(int *vetor, int *contagem) {
-    for (int i = 0; i < A; i++) {
+    int i;
+    for (i = 0; i < A; i++) {
         contagem[vetor[i]]++;
     }
-
-    int k = 0;
-    for (int i = 0; i < NOTA_MAXIMA; i++) {
-        for (int j = 0; j < contagem[i]; j++) {
+/*  Ordenacao
+    int j, k;
+    k = 0;
+    for (i = 0; i < NOTA_MAXIMA; i++) {
+        for (j = 0; j < contagem[i]; j++) {
             vetor[k++] = i;
         }
     }
+*/
 }
 
 int calcula_menor(int *contagem) {
@@ -196,48 +185,38 @@ int calcula_maior(int *contagem) {
 
 double calcula_media(int *contagem, int n) {
     int i;
-    double soma = 0;
-    double media = 0;
+    unsigned int soma = 0;
+    double media;
 
     for (i = 0; i < NOTA_MAXIMA; i++) {
-        if (contagem[i] > 0) {
-            soma += contagem[i] * i;
-        }
+        soma += contagem[i] * i;
     }
-
-    media = soma / n;
+    media = (1.0 * soma) / n;
     return media;
 }
 
-int encontra_elemento_mediana(int *contagem, int pos) {
-    int i;
+double calcula_mediana(int *contagem, int n) {
+	int i, ret;
+	int pos = (n + 1) / 2;
     double soma = 0;
-    pos += 1;
+
     for (i = 0; i < NOTA_MAXIMA; i++) {
         soma += contagem[i];
-        if (soma == pos) {
-            return i;
-            break;
-        } else if (soma > pos) {
-            return i;
-            break;
-        }
+		if (soma >= pos) {
+			if ((soma > pos) || ((soma == pos) && (n % 2))) {
+				return i;
+			} else { // soma == pos
+				ret = i;
+				while (soma == pos) {
+					soma += contagem[++i];
+				}
+				return (ret + i) / 2;
+			}
+		}
     }
     return -1;
 }
 
-int calcula_mediana(int *contagem, int n) {
-    int elemento1, elemento2;
-    double mediana = 0;
-    if (n % 2 == 0) {
-        elemento1 = encontra_elemento_mediana(contagem, floor(n/2));
-        elemento2 = encontra_elemento_mediana(contagem, floor((n-1)/2));
-        mediana = ceil((elemento1 + elemento2) / 2.0);
-    } else {
-        mediana = ceil(encontra_elemento_mediana(contagem, floor(n/2)));
-    }
-    return mediana;
-}
 
 float fsqrt(float n) {
     n = 1.0f / n;
@@ -253,6 +232,7 @@ float fsqrt(float n) {
 
     return y;
 }
+
 
 double calcula_desvio_padrao(int *contagem, int n) {
     int i;
@@ -310,38 +290,38 @@ int main(int argc, char *argv[]) {
         regioes[i] = cidades;
     }
 
+#else
+    debug();
+#endif
 
-    // Geracao dos vetores de contagem
-    contagem_regioes = (int **)malloc(sizeof(int *) * R);
-    contagem_pais = (int *)calloc(NOTA_MAXIMA, sizeof(int));
-    contagem_cidades = (int ***) malloc(sizeof(int**) * R);
+// Alocacao de memoria para os vetores de contagem
+    contagem_regioes = (int **) malloc(sizeof(int *) * R);
+    contagem_pais = (int *) calloc(NOTA_MAXIMA, sizeof(int));
+    contagem_cidades = (int ***) malloc(sizeof(int **) * R);
 
     for (i = 0; i < R; i++) {
-        // para cada regi√£o, um vetor de contagem para cada cidade
+        // para cada regi„o, um vetor de contagem para cada cidade
         contagem_cidades[i] = (int **) malloc(sizeof(int *) * C);
         for (j = 0; j < C; j++) {
-            // para cada cidade, um vetor de contagem de cada nota
-            contagem_cidades[i][j] = (int *) malloc(sizeof(int) * NOTA_MAXIMA);
+            // para cada cidade, um vetor de contagem das notas
+            contagem_cidades[i][j] = (int *) calloc(NOTA_MAXIMA, sizeof(int));
         }
-        contagem_regioes[i] = (int *)calloc(NOTA_MAXIMA, sizeof(int));
+        contagem_regioes[i] = (int *) calloc(NOTA_MAXIMA, sizeof(int));
     }
 
     escrever_matriz();
 
-#else
-    debug();
-#endif
 // Alocacao de memoria para os resultados:
     // Cidades
     menor = (int **) malloc(sizeof(int *) * R);
     maior = (int **) malloc(sizeof(int *) * R);
-    mediana = (int **) malloc(sizeof(int *) * R);
+    mediana = (double **) malloc(sizeof(double *) * R);
     media = (double **) malloc(sizeof(double *) * R);
     DP = (double **) malloc(sizeof(double *) * R);
     for (i = 0; i < R; i++) {
         menor[i] = (int *) malloc(sizeof(int) * C);
         maior[i] = (int *) malloc(sizeof(int) * C);
-        mediana[i] = (int *) malloc(sizeof(int) * C);
+        mediana[i] = (double *) malloc(sizeof(double) * C);
         media[i] = (double *) malloc(sizeof(double) * C);
         DP[i] = (double *) malloc(sizeof(double) * C);
     }
@@ -349,19 +329,19 @@ int main(int argc, char *argv[]) {
     // Regioes
     menor_regiao = (int *) malloc(sizeof(int) * R);
     maior_regiao = (int *) malloc(sizeof(int) * R);
-    mediana_regiao = (int *) malloc(sizeof(int) * R);
+    mediana_regiao = (double *) malloc(sizeof(double) * R);
     media_regiao = (double *) malloc(sizeof(double) * R);
     DP_regiao = (double *) malloc(sizeof(double) * R);
 
     start_time = omp_get_wtime();
 
-    // Gera√ß√£o dos vetores de contagem
+// GeraÁ„o dos vetores de contagem
     for (i = 0; i < R; i++) {
-        // gerar vetores de contagem para cada cidade
+        // Gerar vetores de contagem para cada cidade
         for (j = 0; j < C; j++) {
             counting_sort(regioes[i][j], contagem_cidades[i][j]);
         }
-        // para gerar o vetor de contagem da regi√£o, somar os 
+        // Para gerar o vetor de contagem da regi„o, somar os
         // vetores de cidade
         for (j = 0; j < C; j++) {
             for (k = 0; k < NOTA_MAXIMA; k++) {
@@ -369,15 +349,15 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    // para gerar o vetor de contagem do pa√≠s, somar
-    // os vetores de regi√£o
+    // Para gerar o vetor de contagem do paÌs, somar
+    // os vetores de regi„o
     for (i = 0; i < R; i++) {
         for (k = 0; k < NOTA_MAXIMA; k++) {
             contagem_pais[k] += contagem_regioes[i][k];
         }
     }
 
-    // Calculo das estatisticas
+// Calculo das estatisticas
     for (i = 0; i < R; i++) {
         for (j = 0; j < C; j++) {
             menor[i][j] = calcula_menor(contagem_cidades[i][j]);
@@ -430,7 +410,7 @@ int main(int argc, char *argv[]) {
             printf("Reg %d - Cid %d: "
                     "menor: %d, "
                     "maior: %d, "
-                    "mediana: %d, "
+                    "mediana: %.2lf, "
                     "media: %.2lf e "
                     "DP: %.2lf\n",
                     i, j,
@@ -448,7 +428,7 @@ int main(int argc, char *argv[]) {
         printf("Reg %d: "
                 "menor: %d, "
                 "maior: %d, "
-                "mediana: %d, "
+                "mediana: %.2lf, "
                 "media: %.2lf e "
                 "DP: %.2lf\n",
                 i,
@@ -464,7 +444,7 @@ int main(int argc, char *argv[]) {
     printf("Brasil: "
             "menor: %d, "
             "maior: %d, "
-            "mediana: %d, "
+            "mediana: %.2lf, "
             "media: %.2lf e "
             "DP: %.2lf\n\n",
             menor_brasil,
@@ -482,7 +462,7 @@ int main(int argc, char *argv[]) {
             melhor_cidade);
 
     // Tempo de execucao
-    printf("Tempo de execucao: %g\n", time);
+    printf("Tempo de resposta sem considerar E/S, em segundos: %.3lf\n", time);
 
     // Desalocacao de memoria
     for (i = 0; i < R; i++) {
@@ -491,11 +471,14 @@ int main(int argc, char *argv[]) {
         free(mediana[i]);
         free(media[i]);
         free(DP[i]);
+        free(contagem_regioes[i]);
         for (j = 0; j < C; j++) {
             free(regioes[i][j]);
+            free(contagem_cidades[i][j]);
         }
         free(regioes[i]);
     }
+    free(contagem_pais);
     free(regioes);
     free(menor);
     free(maior);
