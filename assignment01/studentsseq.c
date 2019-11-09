@@ -9,7 +9,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
+#include <math.h>
 #include <omp.h>
 
 #define NOTA_MAXIMA 101
@@ -49,7 +51,7 @@ int *contagem_pais;
 */
 int **menor;
 int **maior;
-double **mediana;
+int **mediana;
 double **media;
 double **DP;
 
@@ -59,7 +61,7 @@ double **DP;
 */
 int *menor_regiao;
 int *maior_regiao;
-double *mediana_regiao;
+int *mediana_regiao;
 double *media_regiao;
 double *DP_regiao;
 
@@ -68,7 +70,7 @@ double *DP_regiao;
 */
 int menor_brasil;
 int maior_brasil;
-double mediana_brasil;
+int mediana_brasil;
 double media_brasil;
 double DP_brasil;
 
@@ -172,24 +174,110 @@ void counting_sort(int *vetor, int *contagem) {
     }
 }
 
-void calcula_menor() {
-
+int calcula_menor(int *contagem) {
+    int i;
+    for (i = 0; i < NOTA_MAXIMA; i++) {
+        if (contagem[i] > 0) {
+            return i;
+        }
+    }
+    return -1;
 }
 
-void calcula_maior() {
-
+int calcula_maior(int *contagem) {
+    int i;
+    for (i = NOTA_MAXIMA; i >= 0; i--) {
+        if (contagem[i] > 0) {
+            return i;
+        }
+    }
+    return -1;
 }
 
-void calcula_media() {
+double calcula_media(int *contagem, int n) {
+    int i;
+    double soma = 0;
+    double media = 0;
 
+    for (i = 0; i < NOTA_MAXIMA; i++) {
+        if (contagem[i] > 0) {
+            soma += contagem[i] * i;
+        }
+    }
+
+    media = soma / n;
+    return media;
 }
 
-void calcula_mediana() {
-
+int encontra_elemento_mediana(int *contagem, int pos) {
+    int i;
+    double soma = 0;
+    pos += 1;
+    for (i = 0; i < NOTA_MAXIMA; i++) {
+        soma += contagem[i];
+        if (soma == pos) {
+            return i;
+            break;
+        } else if (soma > pos) {
+            return i;
+            break;
+        }
+    }
+    return -1;
 }
 
-void calcula_desvio_padrao() {
+int calcula_mediana(int *contagem, int n) {
+    int elemento1, elemento2;
+    double mediana = 0;
+    if (n % 2 == 0) {
+        elemento1 = encontra_elemento_mediana(contagem, floor(n/2));
+        elemento2 = encontra_elemento_mediana(contagem, floor((n-1)/2));
+        mediana = ceil((elemento1 + elemento2) / 2.0);
+    } else {
+        mediana = ceil(encontra_elemento_mediana(contagem, floor(n/2)));
+    }
+    return mediana;
+}
 
+float fsqrt(float n) {
+    n = 1.0f / n;
+    long i;
+    float x, y;
+
+    x = n * 0.5f;
+    y = n;
+    i = *(long *)&y;
+    i = 0x5f3759df - (i >> 1);
+    y = *(float *)&i;
+    y = y * (1.5f - (x * y * y));
+
+    return y;
+}
+
+double calcula_desvio_padrao(int *contagem, int n) {
+    int i;
+    double dp = 0;
+    double soma = 0;
+    double soma_q = 0;
+    double variancia = 0;
+
+    for (i = 0; i < NOTA_MAXIMA; i++) {
+        soma += contagem[i] * i;
+    }
+
+    double media = soma / n;
+
+    for (i = 0; i < NOTA_MAXIMA; i++) {
+        soma_q += ((i - media) * (i - media)) * contagem[i];
+    }
+
+    variancia = soma_q / n;
+
+    dp = fsqrt(variancia);
+    if (dp < 0) {
+        dp *= -1;
+    }
+    return dp;
 }
 
 int main(int argc, char *argv[]) {
@@ -222,6 +310,7 @@ int main(int argc, char *argv[]) {
         regioes[i] = cidades;
     }
 
+
     // Geracao dos vetores de contagem
     contagem_regioes = (int **)malloc(sizeof(int *) * R);
     contagem_pais = (int *)calloc(NOTA_MAXIMA, sizeof(int));
@@ -237,6 +326,7 @@ int main(int argc, char *argv[]) {
         contagem_regioes[i] = (int *)calloc(NOTA_MAXIMA, sizeof(int));
     }
 
+    escrever_matriz();
 
 #else
     debug();
@@ -245,13 +335,13 @@ int main(int argc, char *argv[]) {
     // Cidades
     menor = (int **) malloc(sizeof(int *) * R);
     maior = (int **) malloc(sizeof(int *) * R);
-    mediana = (double **) malloc(sizeof(double *) * R);
+    mediana = (int **) malloc(sizeof(int *) * R);
     media = (double **) malloc(sizeof(double *) * R);
     DP = (double **) malloc(sizeof(double *) * R);
     for (i = 0; i < R; i++) {
         menor[i] = (int *) malloc(sizeof(int) * C);
         maior[i] = (int *) malloc(sizeof(int) * C);
-        mediana[i] = (double *) malloc(sizeof(double) * C);
+        mediana[i] = (int *) malloc(sizeof(int) * C);
         media[i] = (double *) malloc(sizeof(double) * C);
         DP[i] = (double *) malloc(sizeof(double) * C);
     }
@@ -259,27 +349,11 @@ int main(int argc, char *argv[]) {
     // Regioes
     menor_regiao = (int *) malloc(sizeof(int) * R);
     maior_regiao = (int *) malloc(sizeof(int) * R);
-    mediana_regiao = (double *) malloc(sizeof(double) * R);
+    mediana_regiao = (int *) malloc(sizeof(int) * R);
     media_regiao = (double *) malloc(sizeof(double) * R);
     DP_regiao = (double *) malloc(sizeof(double) * R);
 
-    escrever_matriz();
-
-    // Calculo das estatisticas
-
     start_time = omp_get_wtime();
-
-    // Impressão da matriz para depuração
-    // printf("\nPRÉ-ORDENAÇÃO\n");
-    // for (i = 0; i < R; i++) {
-    //     for (j = 0; j < C; j++) {
-    //         for (k = 0; k < A; k++) {
-    //             printf("%d ", regioes[i][j][k]);
-    //         }
-    //         printf("\n");
-    //     }
-    // }
-    // printf("\n");
 
     // Geração dos vetores de contagem
     for (i = 0; i < R; i++) {
@@ -303,20 +377,51 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // Calculo das estatisticas
+    for (i = 0; i < R; i++) {
+        for (j = 0; j < C; j++) {
+            menor[i][j] = calcula_menor(contagem_cidades[i][j]);
+            maior[i][j] = calcula_maior(contagem_cidades[i][j]);
+            mediana[i][j] = calcula_mediana(contagem_cidades[i][j], A);
+            media[i][j] = calcula_media(contagem_cidades[i][j], A);
+            DP[i][j] = calcula_desvio_padrao(contagem_cidades[i][j], A);
+        }
+        menor_regiao[i] = calcula_menor(contagem_regioes[i]);
+        maior_regiao[i] = calcula_maior(contagem_regioes[i]);
+        mediana_regiao[i] = calcula_mediana(contagem_regioes[i], C * A);
+        media_regiao[i] = calcula_media(contagem_regioes[i], C * A);
+        DP_regiao[i] = calcula_desvio_padrao(contagem_regioes[i], C * A);
+    }
+
+    menor_brasil = calcula_menor(contagem_pais);
+    maior_brasil = calcula_maior(contagem_pais);
+    mediana_brasil = calcula_mediana(contagem_pais, R * C * A);
+    media_brasil = calcula_media(contagem_pais, R * C * A);
+    DP_brasil = calcula_desvio_padrao(contagem_pais, R * C * A);
+
+    melhor_regiao = 0;
+    double max = media_regiao[0];
+    for (i = 0; i < R; i++) {
+        if (media_regiao[i] > max) {
+            max = media_regiao[i];
+            melhor_regiao = i;
+        }
+    }
+
+    melhor_cidade = 0;
+    melhor_cidade_regiao = 0;
+    max = media[0][0];
+    for (i = 0; i < R; i++) {
+        for (j = 0; j < C; j++) {
+            if (media[i][j] > max) {
+                max = media[i][j];
+                melhor_cidade = j;
+                melhor_cidade_regiao = i;
+            }
+        }
+    }
+
     time = omp_get_wtime() - start_time;
-
-    // Impressão da matriz para depuração
-    // printf("\nPÓS-ORDENAÇÃO\n");
-    // for (i = 0; i < R; i++) {
-    //     for (j = 0; j < C; j++) {
-    //         for (k = 0; k < A; k++) {
-    //             printf("%d ", regioes[i][j][k]);
-    //         }
-    //         printf("\n");
-    //     }
-    // }
-    // printf("\n");
-
 
 // Impressao dos resultados:
     // Cidades
@@ -325,7 +430,7 @@ int main(int argc, char *argv[]) {
             printf("Reg %d - Cid %d: "
                     "menor: %d, "
                     "maior: %d, "
-                    "mediana: %.2lf, "
+                    "mediana: %d, "
                     "media: %.2lf e "
                     "DP: %.2lf\n",
                     i, j,
@@ -343,7 +448,7 @@ int main(int argc, char *argv[]) {
         printf("Reg %d: "
                 "menor: %d, "
                 "maior: %d, "
-                "mediana: %.2lf, "
+                "mediana: %d, "
                 "media: %.2lf e "
                 "DP: %.2lf\n",
                 i,
@@ -359,7 +464,7 @@ int main(int argc, char *argv[]) {
     printf("Brasil: "
             "menor: %d, "
             "maior: %d, "
-            "mediana: %.2lf, "
+            "mediana: %d, "
             "media: %.2lf e "
             "DP: %.2lf\n\n",
             menor_brasil,
