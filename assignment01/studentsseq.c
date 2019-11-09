@@ -38,7 +38,7 @@ int ***regioes;
 
 /*
     Vetores de contagem de notas
-    para o Counting Sort e cálculos
+    para o Counting Sort e cÃ¡lculos
     requisitados.
 */
 int ***contagem_cidades;
@@ -217,18 +217,21 @@ double calcula_mediana(int *contagem, int n) {
     return -1;
 }
 
+/*
+Adapted from:
+https://cs.uwaterloo.ca/~m32rober/rsqrt.pdf
+*/
+double fsqrt(double n) {
+    n = 1.0 / n;
+    unsigned long long i;
+    double x, y;
 
-float fsqrt(float n) {
-    n = 1.0f / n;
-    long i;
-    float x, y;
-
-    x = n * 0.5f;
+    x = n * 0.5;
     y = n;
-    i = *(long *)&y;
-    i = 0x5f3759df - (i >> 1);
-    y = *(float *)&i;
-    y = y * (1.5f - (x * y * y));
+    i = *(unsigned long long *)&y;
+    i = 0x5fe6eb50c7b537a9 - (i >> 1);
+    y = *(double *)&i;
+    y = y * (1.5 - (x * y * y));
 
     return y;
 }
@@ -300,7 +303,7 @@ int main(int argc, char *argv[]) {
     contagem_cidades = (int ***) malloc(sizeof(int **) * R);
 
     for (i = 0; i < R; i++) {
-        // para cada região, um vetor de contagem para cada cidade
+        // para cada regiÃ£o, um vetor de contagem para cada cidade
         contagem_cidades[i] = (int **) malloc(sizeof(int *) * C);
         for (j = 0; j < C; j++) {
             // para cada cidade, um vetor de contagem das notas
@@ -335,13 +338,13 @@ int main(int argc, char *argv[]) {
 
     start_time = omp_get_wtime();
 
-// Geração dos vetores de contagem
+// GeraÃ§Ã£o dos vetores de contagem
     for (i = 0; i < R; i++) {
         // Gerar vetores de contagem para cada cidade
         for (j = 0; j < C; j++) {
             counting_sort(regioes[i][j], contagem_cidades[i][j]);
         }
-        // Para gerar o vetor de contagem da região, somar os
+        // Para gerar o vetor de contagem da regiÃ£o, somar os
         // vetores de cidade
         for (j = 0; j < C; j++) {
             for (k = 0; k < NOTA_MAXIMA; k++) {
@@ -349,8 +352,8 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    // Para gerar o vetor de contagem do país, somar
-    // os vetores de região
+    // Para gerar o vetor de contagem do paÃ­s, somar
+    // os vetores de regiÃ£o
     for (i = 0; i < R; i++) {
         for (k = 0; k < NOTA_MAXIMA; k++) {
             contagem_pais[k] += contagem_regioes[i][k];
