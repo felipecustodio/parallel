@@ -375,6 +375,7 @@ int main(int argc, char *argv[]) {
     }
 
 // Calculo das estatisticas
+#pragma omp parallel for schedule(static) collapse(2)
     for (i = 0; i < R; i++) {
         for (j = 0; j < C; j++) {
             menor[i][j] = calcula_menor(contagem_cidades[i][j]);
@@ -383,35 +384,64 @@ int main(int argc, char *argv[]) {
             media[i][j] = calcula_media(contagem_cidades[i][j], A);
             DP[i][j] = calcula_desvio_padrao(contagem_cidades[i][j], A);
         }
-        menor_regiao[i] = calcula_menor(contagem_regioes[i]);
+    }
+#pragma omp parallel for schedule(static)
+	for (i = 0; i < R; i++) {
+		menor_regiao[i] = calcula_menor(contagem_regioes[i]);
         maior_regiao[i] = calcula_maior(contagem_regioes[i]);
         mediana_regiao[i] = calcula_mediana(contagem_regioes[i], C * A);
         media_regiao[i] = calcula_media(contagem_regioes[i], C * A);
         DP_regiao[i] = calcula_desvio_padrao(contagem_regioes[i], C * A);
-    }
+	}
+/*
+   Consideramos o seguinte trecho de codigo com sections, mas pelos vetores
+   de contagem terem o mesmo tamanho fixo de 101 elementos, percebemos que
+   rodar sequencialmente era mais vantajoso
+#pragma omp parallel sections
+{
+	#pragma omp section
+	{
+		menor_brasil = calcula_menor(contagem_pais);
+		maior_brasil = calcula_maior(contagem_pais);
+		mediana_brasil = calcula_mediana(contagem_pais, R * C * A);
+	}
+	#pragma omp section
+	{
+		media_brasil = calcula_media(contagem_pais, R * C * A);
+	}
+	#pragma omp section
+	{
+	    DP_brasil = calcula_desvio_padrao(contagem_pais, R * C * A);
+	}
+}
+*/
+	menor_brasil = calcula_menor(contagem_pais);
+	maior_brasil = calcula_maior(contagem_pais);
+	mediana_brasil = calcula_mediana(contagem_pais, R * C * A);
+	media_brasil = calcula_media(contagem_pais, R * C * A);
+	DP_brasil = calcula_desvio_padrao(contagem_pais, R * C * A);
 
-    menor_brasil = calcula_menor(contagem_pais);
-    maior_brasil = calcula_maior(contagem_pais);
-    mediana_brasil = calcula_mediana(contagem_pais, R * C * A);
-    media_brasil = calcula_media(contagem_pais, R * C * A);
-    DP_brasil = calcula_desvio_padrao(contagem_pais, R * C * A);
-
+	// Calculo das melhores regioes
     melhor_regiao = 0;
-    double max = media_regiao[0];
+    double max_val = 0;
+// max_val nao precisaria ser inicializado pois comeca com o menor valor
+// na reducao, mas a inicializamos para remover um warning de compilacao
+
+#pragma omp parallel for reduction (max:max_val)
     for (i = 0; i < R; i++) {
-        if (media_regiao[i] > max) {
-            max = media_regiao[i];
+        if (media_regiao[i] > max_val) {
+            max_val = media_regiao[i];
             melhor_regiao = i;
         }
     }
 
     melhor_cidade = 0;
     melhor_cidade_regiao = 0;
-    max = media[0][0];
+#pragma omp parallel for collapse(2) reduction(max:max_val)
     for (i = 0; i < R; i++) {
         for (j = 0; j < C; j++) {
-            if (media[i][j] > max) {
-                max = media[i][j];
+            if (media[i][j] > max_val) {
+                max_val = media[i][j];
                 melhor_cidade = j;
                 melhor_cidade_regiao = i;
             }
