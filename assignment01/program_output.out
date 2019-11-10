@@ -21,4 +21,4 @@ Brasil: menor: 0, maior: 98, mediana: 56.00, media: 52.40 e DP: 29.43
 
 Melhor regiao: Regiao 1
 Melhor cidade: Regiao 0, Cidade 2
-Tempo de resposta sem considerar E/S, em segundos: 0.024
+Tempo de resposta sem considerar E/S, em segundos: 0.009
