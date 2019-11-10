@@ -34,7 +34,7 @@ for index_region, region in enumerate(grades):
         media = np.average(city)
         DP = np.std(city)
         city_averages[(index_region, index_city)] = media
-        print(f"menor: {menor:.0f}, maior: {maior:.0f}, mediana: {np.ceil(mediana):.0f}, media: {media:.2f} e DP: {DP:.2f}")
+        print(f"menor: {menor:.2f}, maior: {maior:.2f}, mediana: {np.ceil(mediana):.2f}, media: {media:.2f} e DP: {DP:.2f}")
 
 
 print()
@@ -49,7 +49,7 @@ for index_region, region in enumerate(grades):
     media = np.average(region)
     DP = np.std(region)
     region_averages[index_region] = media
-    print(f"menor: {menor:.0f}, maior: {maior:.0f}, mediana: {np.ceil(mediana):.0f}, media: {media:.2f} e DP: {DP:.2f}")
+    print(f"menor: {menor:.2f}, maior: {maior:.2f}, mediana: {np.ceil(mediana):.2f}, media: {media:.2f} e DP: {DP:.2f}")
 
 
 print()
@@ -61,7 +61,7 @@ maior = np.max(grades)
 mediana = np.median(grades)
 media = np.average(grades)
 DP = np.std(grades)
-print(f"menor: {menor:.0f}, maior: {maior:.0f}, mediana: {np.ceil(mediana):.0f}, media: {media:.2f} e DP: {DP:.2f}")
+print(f"menor: {menor:.2f}, maior: {maior:.2f}, mediana: {np.ceil(mediana):.2f}, media: {media:.2f} e DP: {DP:.2f}")
 
 
 print()
