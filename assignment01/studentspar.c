@@ -141,7 +141,7 @@ void escrever_matriz() {
     FILE *fp = NULL;
     int i, j, k;
 
-    fp = fopen("./matriz_gerada.csv", "w");
+    fp = fopen("./matriz_gerada_par.csv", "w");
     if (fp == NULL) {
         exit(1);
     }
