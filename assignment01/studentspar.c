@@ -207,15 +207,15 @@ double calcula_mediana(int *contagem, int n) {
 			if ((soma > pos) || ((soma == pos) && (n % 2))) {
 				return i;
 			} else { // soma == pos
-				ret = i;
+				ret = i * 1.0;
 				while (soma == pos) {
 					soma += contagem[++i];
 				}
-				return (ret + i) / 2;
+				return (ret + i) * 1.0 / 2;
 			}
 		}
     }
-    return -1;
+    return -1.0;
 }
 
 /*
