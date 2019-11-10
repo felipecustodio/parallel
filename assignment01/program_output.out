@@ -1,10 +1,10 @@
-Reg 0 - Cid 0: menor: 0, maior: 79, mediana: 21.00, media: 25.50 e DP: 25.67
+Reg 0 - Cid 0: menor: 0, maior: 79, mediana: 21.50, media: 25.50 e DP: 25.67
 Reg 0 - Cid 1: menor: 29, maior: 94, mediana: 75.00, media: 66.00 e DP: 25.94
 Reg 0 - Cid 2: menor: 30, maior: 89, mediana: 72.00, media: 68.50 e DP: 19.58
-Reg 0 - Cid 3: menor: 0, maior: 98, mediana: 55.00, media: 56.50 e DP: 32.92
+Reg 0 - Cid 3: menor: 0, maior: 98, mediana: 55.50, media: 56.50 e DP: 32.92
 
 Reg 1 - Cid 0: menor: 13, maior: 90, mediana: 45.00, media: 47.33 e DP: 26.51
-Reg 1 - Cid 1: menor: 1, maior: 94, mediana: 51.00, media: 45.33 e DP: 31.91
+Reg 1 - Cid 1: menor: 1, maior: 94, mediana: 51.50, media: 45.33 e DP: 31.91
 Reg 1 - Cid 2: menor: 36, maior: 90, mediana: 70.00, media: 66.33 e DP: 19.05
 Reg 1 - Cid 3: menor: 22, maior: 92, mediana: 60.00, media: 58.50 e DP: 23.83
 
@@ -13,12 +13,12 @@ Reg 2 - Cid 1: menor: 4, maior: 96, mediana: 27.00, media: 35.33 e DP: 32.29
 Reg 2 - Cid 2: menor: 51, maior: 84, mediana: 67.00, media: 67.83 e DP: 13.55
 Reg 2 - Cid 3: menor: 0, maior: 95, mediana: 46.00, media: 43.67 e DP: 32.40
 
-Reg 0: menor: 0, maior: 98, mediana: 62.00, media: 54.12 e DP: 31.51
+Reg 0: menor: 0, maior: 98, mediana: 62.50, media: 54.12 e DP: 31.51
 Reg 1: menor: 1, maior: 94, mediana: 58.00, media: 54.38 e DP: 27.14
-Reg 2: menor: 0, maior: 96, mediana: 54.00, media: 48.71 e DP: 29.08
+Reg 2: menor: 0, maior: 96, mediana: 54.50, media: 48.71 e DP: 29.08
 
 Brasil: menor: 0, maior: 98, mediana: 56.00, media: 52.40 e DP: 29.43
 
-Melhor regiao: Regiao 0
-Melhor cidade: Regiao 0, Cidade 1
-Tempo de resposta sem considerar E/S, em segundos: 0.016
+Melhor regiao: Regiao 1
+Melhor cidade: Regiao 0, Cidade 2
+Tempo de resposta sem considerar E/S, em segundos: 0.024
