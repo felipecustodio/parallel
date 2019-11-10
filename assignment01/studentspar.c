@@ -231,8 +231,8 @@ double calcula_mediana(int *contagem, int n) {
 }
 
 /*
-Adapted from:
-https://cs.uwaterloo.ca/~m32rober/rsqrt.pdf
+	Adapted from:
+	https://cs.uwaterloo.ca/~m32rober/rsqrt.pdf
 */
 double fsqrt(double n) {
     n = 1.0 / n;
