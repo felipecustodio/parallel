@@ -17,6 +17,18 @@
 #define NOTA_MAXIMA 101
 #define NTHREADS 8
 
+// Reducao definida pelo usuario para possibilitar a obtencao dos indices
+// onde se econtra os valores maximos
+struct Compare {
+	double val;
+	int mr;
+	int mc;
+	int mcr;
+};
+#pragma omp declare reduction(maximum : struct Compare : \
+		omp_out = omp_in.val > omp_out.val ? omp_in : omp_out)
+
+
 /*
     Entrada do programa:
     R = Numero de regioes distintas.
@@ -207,15 +219,15 @@ double calcula_mediana(int *contagem, int n) {
 			if ((soma > pos) || ((soma == pos) && (n % 2))) {
 				return i;
 			} else { // soma == pos
-				ret = i;
+				ret = i * 1.0;
 				while (soma == pos) {
 					soma += contagem[++i];
 				}
-				return (ret + i) / 2;
+				return (ret + i) * 1.0 / 2;
 			}
 		}
     }
-    return -1;
+    return -1.0;
 }
 
 /*
@@ -422,31 +434,39 @@ int main(int argc, char *argv[]) {
 	DP_brasil = calcula_desvio_padrao(contagem_pais, R * C * A);
 
 	// Calculo das melhores regioes
-    melhor_regiao = 0;
-    double max_val = 0;
-// max_val nao precisaria ser inicializado pois comeca com o menor valor
-// na reducao, mas a inicializamos para remover um warning de compilacao
 
-#pragma omp parallel for reduction (max:max_val)
-    for (i = 0; i < R; i++) {
-        if (media_regiao[i] > max_val) {
-            max_val = media_regiao[i];
-            melhor_regiao = i;
+	// Foi utilizado uma reducao definida pelo usuario para que fosse
+	// possivel armazenar o valor do indice da melhor regiao
+    struct Compare max_val;
+	max_val.val = media_regiao[0];
+	max_val.mr = 0;
+#pragma omp parallel for reduction(maximum:max_val)
+    for (i = 1; i < R; i++) {
+        if (media_regiao[i] > max_val.val) {
+            max_val.val = media_regiao[i];
+            max_val.mr = i;
         }
     }
+	melhor_regiao = max_val.mr;
 
-    melhor_cidade = 0;
-    melhor_cidade_regiao = 0;
-#pragma omp parallel for collapse(2) reduction(max:max_val)
+	// Foi utilizado uma reducao definida pelo usuario para que fosse
+	// possivel armazenar o valor do indice da melhor cidade e da
+	// melhor regiao no qual essa cidade esta
+	max_val.val = media[0][0];
+    max_val.mc = 0;
+    max_val.mcr = 0;
+#pragma omp parallel for collapse(2) reduction(maximum:max_val)
     for (i = 0; i < R; i++) {
         for (j = 0; j < C; j++) {
-            if (media[i][j] > max_val) {
-                max_val = media[i][j];
-                melhor_cidade = j;
-                melhor_cidade_regiao = i;
+            if (media[i][j] > max_val.val) {
+                max_val.val = media[i][j];
+                max_val.mc = j;
+                max_val.mcr = i;
             }
         }
     }
+	melhor_cidade = max_val.mc;
+	melhor_cidade_regiao = max_val.mcr;
 
 	// Termina de contar o tempo de execucao
     time = omp_get_wtime() - start_time;
