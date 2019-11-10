@@ -24,7 +24,7 @@ grades = grades_2d.reshape((R, C, A))
 
 city_averages = {}
 for index_region, region in enumerate(grades):
-    if(index_region > 0): 
+    if(index_region > 0):
         print()
     for index_city, city in enumerate(region):
         print(f"Reg {index_region} - Cid {index_city}: ", end='')
