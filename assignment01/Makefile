@@ -6,8 +6,8 @@ BINARY = ./students
 IN = input.in
 
 # sources
-# SRC = ./studentspar.c
-SRC = ./studentsseq.c
+SRC = ./studentspar.c
+#SRC = ./studentsseq.c
 
 # includes
 INCLUDES = .
