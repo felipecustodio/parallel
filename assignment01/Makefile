@@ -2,7 +2,6 @@
 CC = gcc
 
 # output
-BINARY = ./students
 BINARY_SEQ = ./students_seq
 BINARY_PAR = ./students_par
 IN = input.in
@@ -25,7 +24,6 @@ all: compile run
 compile:
 	$(CC) -o $(BINARY_SEQ) -I $(INCLUDES) $(SRC_SEQ) $(FLAGS)
 	$(CC) -o $(BINARY_PAR) -I $(INCLUDES) $(SRC_PAR) $(FLAGS)
-	$(CC) -o $(BINARY) -I $(INCLUDES) $(SRC_PAR) $(FLAGS)
 
 run:
 	$(BINARY_PAR) < $(IN) > program_output_par.out
