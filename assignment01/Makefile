@@ -29,8 +29,11 @@ run:
 	$(BINARY_PAR) < $(IN) > program_output_par.out
 	$(BINARY_SEQ) < $(IN) > program_output_seq.out
 
-debug:
-	valgrind --leak-check=full --show-reachable=yes --track-origins=yes $(BINARY)
+debug-seq:
+	valgrind --leak-check=full --show-reachable=yes --track-origins=yes $(BINARY_SEQ)
+	
+debug-par:
+	valgrind --leak-check=full --show-reachable=yes --track-origins=yes $(BINARY_PAR)
 
 clean:
 	rm *.o
