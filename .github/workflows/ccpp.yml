@@ -1,4 +1,4 @@
-name: Assignment 1 - CI
+name: Assignment 2 - CI
 
 on: [push]
 
@@ -12,4 +12,4 @@ jobs:
       
     - name: make
       run: make
-      working-directory: ./assignment01
+      working-directory: ./assignment02
